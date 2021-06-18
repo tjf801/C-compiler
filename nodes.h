@@ -3,6 +3,7 @@
 
 typedef enum NodeBase {
 	NullStatementNodeBase = 0,
+	BlockNodeBase,
 	ExpressionStatementNodeBase,
 	ReturnStatementNodeBase,
 	
@@ -131,5 +132,14 @@ typedef struct ReturnStatementNode {
 	NodeBase *expression;
 } ReturnStatementNode;
 ReturnStatementNode *new_ReturnStatementNode(NodeBase* expression);
+
+typedef struct BlockNode {
+	NodeBase type;
+	size_t max_size;
+	size_t block_length;
+	NodeBase **block_items;
+} BlockNode;
+BlockNode *new_BlockNode(size_t initial_size);
+void BlockNode_push_BlockItem(BlockNode *self, NodeBase *block_item);
 
 #endif

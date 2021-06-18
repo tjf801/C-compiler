@@ -24,6 +24,19 @@ static void pop() {
 	stack_depth--;
 }
 
+void codegen_block(const NodeBase *node) {
+	if (*node==BlockNodeBase) {
+		BlockNode *block = (BlockNode*)node;
+		for (int block_number = 0; block_number < block->block_length; ++block_number) {
+			codegen_block_item(block->block_items[block_number]);
+		}
+	} else codegen_error("expected a block");
+}
+
+void codegen_block_item(const NodeBase *node) {
+	return codegen_statement(node); //TODO
+}
+
 void codegen_statement(const NodeBase *node) {
 	switch (*node) {
 		case NullStatementNodeBase: {
@@ -167,9 +180,9 @@ void codegen(const NodeBase *node) {
 	printf("main:\n");
 	printf("  push %%rbp\n");
 	printf("  mov %%rsp, %%rbp\n");
-	codegen_statement(node);
+	codegen_block(node);
 	printf(".L.return:\n");
 	printf("  mov %%rbp, %%rsp\n");
 	printf("  pop %%rbp\n");
-	printf("  ret\n");	
+	printf("  ret\n");
 }

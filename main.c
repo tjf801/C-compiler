@@ -32,8 +32,19 @@ int main(int argc, char **argv) {
 	// first argument
 	char *p = argv[1];
 	
+	/*
+	TODO:
+	blocks `{}`
+	single letter vars `a = 3;`
+	multiple letter vars `test = 4;`
+	function
+	if stmnt
+	while stmnt
+	for stmnt
+	*/
+	
 	Parser *parser = new_Parser(p);
-	NodeBase *tree = Parser_parse_statement(parser);
+	NodeBase *tree = Parser_parse_block(parser);
 	codegen(tree);
 	
 	return 0;

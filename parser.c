@@ -20,6 +20,9 @@ TokenVector *new_TokenVector(size_t initial_max_size) {
 	return T;
 }
 void TokenVector_free(TokenVector *self) {
+	for (int i = 0; i < self->length; ++i) {
+		free(self->data[i]);
+	}
 	free(self->data);
 	self->data = NULL;
 	self->length = self->max_size = 0;
@@ -53,6 +56,37 @@ Token *Parser_pop_next_token(Parser *self) {
 	TokenVector_push(self->previous_tokens, self->next_token);
 	self->next_token = NULL;
 	return self->previous_tokens->data[self->previous_tokens->length-1];
+}
+
+NodeBase *Parser_parse_block(Parser *self) {
+	/*
+	compound_statement
+		: '{' '}'
+		| '{'  { block_item } '}'
+		;
+	*/
+	Token *next_token = Parser_pop_next_token(self);
+	if (next_token->token_base==OperatorTokenBase&&((OperatorToken*)next_token)->type==OpenBrace) {
+		BlockNode *block = new_BlockNode(2);
+		while (!(Parser_peek_next_token(self)->token_base==OperatorTokenBase&&((OperatorToken*)Parser_peek_next_token(self))->type==CloseBrace)) {
+			BlockNode_push_BlockItem(block, Parser_parse_block_item(self));
+		}
+		Parser_pop_next_token(self); // will be a '}'
+		return (NodeBase*)block;
+	}
+	else {
+		parser_error("expected '{' token for block statement");
+	}
+}
+
+NodeBase *Parser_parse_block_item(Parser *self) {
+	/*
+	block_item
+		: declaration
+		| statement
+		;
+	*/
+	return Parser_parse_statement(self); //TODO
 }
 
 NodeBase *Parser_parse_statement(Parser *self) {

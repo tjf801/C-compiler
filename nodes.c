@@ -109,6 +109,22 @@ GreaterThanNode *new_GreaterThanNode(NodeBase *left, NodeBase *right) {
 }
 
 
+BlockNode *new_BlockNode(size_t initial_size) {
+	BlockNode *B = malloc(sizeof(BlockNode));
+	B->type = BlockNodeBase;
+	B->max_size = initial_size;
+	B->block_length = 0;
+	B->block_items = malloc(sizeof(NodeBase*)*initial_size);
+	return B;
+}
+void BlockNode_push_BlockItem(BlockNode *self, NodeBase *block_item) {
+	if (self->block_length == self->max_size) {
+		self->max_size *= 2;
+		self->block_items = realloc(self->block_items, self->max_size*sizeof(BlockNode*));
+	}
+	self->block_items[self->block_length++] = block_item;
+}
+
 ExpressionStatementNode *new_ExpressionStatementNode(NodeBase *expression) {
 	ExpressionStatementNode *E = malloc(sizeof(ExpressionStatementNode));
 	E->type = ExpressionStatementNodeBase;
