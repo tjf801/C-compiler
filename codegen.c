@@ -64,6 +64,66 @@ void codegen_expression(const NodeBase *node) {
     		printf("  idiv %%rdi\n");
 			return;
 		}
+		case EqualityNodeBase: {
+			codegen_expression(((EqualityNode*)node)->right);
+			push();
+			codegen_expression(((EqualityNode*)node)->left);
+			pop();
+			printf("  cmp %%rdi, %%rax\n");
+			printf("  sete %%al\n");
+			printf("  movzb %%al, %%rax\n");
+			return;
+		}
+		case InequalityNodeBase: {
+			codegen_expression(((InequalityNode*)node)->right);
+			push();
+			codegen_expression(((InequalityNode*)node)->left);
+			pop();
+			printf("  cmp %%rdi, %%rax\n");
+			printf("  setne %%al\n");
+			printf("  movzb %%al, %%rax\n");
+			return;
+		}
+		case LessThanNodeBase: {
+			codegen_expression(((LessThanNode*)node)->right);
+			push();
+			codegen_expression(((LessThanNode*)node)->left);
+			pop();
+			printf("  cmp %%rdi, %%rax\n");
+			printf("  setl %%al\n");
+			printf("  movzb %%al, %%rax\n");
+			return;
+		}
+		case LessThanOrEqualToNodeBase: {
+			codegen_expression(((LessThanOrEqualToNode*)node)->right);
+			push();
+			codegen_expression(((LessThanOrEqualToNode*)node)->left);
+			pop();
+			printf("  cmp %%rdi, %%rax\n");
+			printf("  setle %%al\n");
+			printf("  movzb %%al, %%rax\n");
+			return;
+		}
+		case GreaterThanNodeBase: {
+			codegen_expression(((GreaterThanNode*)node)->right);
+			push();
+			codegen_expression(((GreaterThanNode*)node)->left);
+			pop();
+			printf("  cmp %%rdi, %%rax\n");
+			printf("  setg %%al\n");
+			printf("  movzb %%al, %%rax\n");
+			return;
+		}
+		case GreaterThanOrEqualToNodeBase: {
+			codegen_expression(((GreaterThanOrEqualToNode*)node)->right);
+			push();
+			codegen_expression(((GreaterThanOrEqualToNode*)node)->left);
+			pop();
+			printf("  cmp %%rdi, %%rax\n");
+			printf("  setge %%al\n");
+			printf("  movzb %%al, %%rax\n");
+			return;
+		}
 		
 	}
 }

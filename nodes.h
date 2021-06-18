@@ -17,7 +17,16 @@ typedef enum NodeBase {
 	MultiplyNodeBase,
 	DivideNodeBase,
 	ModuloNodeBase,
+	
+	EqualityNodeBase,
+	InequalityNodeBase,
+	LessThanOrEqualToNodeBase,
+	GreaterThanOrEqualToNodeBase,
+	LessThanNodeBase,
+	GreaterThanNodeBase,
 } NodeBase;
+
+
 
 typedef struct IntegerNode {
 	NodeBase type;
@@ -31,6 +40,7 @@ typedef struct FloatNode {
 } FloatNode;
 FloatNode *new_FloatNode(double value);
 
+
 typedef struct UnaryMinusNode {
 	NodeBase type;
 	NodeBase *operand; 
@@ -42,6 +52,7 @@ typedef struct UnaryPlusNode {
 	NodeBase *operand; 
 } UnaryPlusNode;
 UnaryPlusNode *new_UnaryPlusNode(NodeBase *operand);
+
 
 typedef struct AddNode {
 	NodeBase type;
@@ -79,5 +90,46 @@ typedef struct ModuloNode {
 ModuloNode *new_ModuloNode(NodeBase *left, NodeBase *right);
 
 
+typedef struct EqualityNode {
+	NodeBase type;
+	NodeBase *left;
+	NodeBase *right;
+} EqualityNode;
+EqualityNode *new_EqualityNode(NodeBase *left, NodeBase *right);
+
+typedef struct InequalityNode {
+	NodeBase type;
+	NodeBase *left;
+	NodeBase *right;
+} InequalityNode;
+InequalityNode *new_InequalityNode(NodeBase *left, NodeBase *right);
+
+typedef struct LessThanOrEqualToNode {
+	NodeBase type;
+	NodeBase *left;
+	NodeBase *right;
+} LessThanOrEqualToNode;
+LessThanOrEqualToNode *new_LessThanOrEqualToNode(NodeBase *left, NodeBase *right);
+
+typedef struct GreaterThanOrEqualToNode {
+	NodeBase type;
+	NodeBase *left;
+	NodeBase *right;
+} GreaterThanOrEqualToNode;
+GreaterThanOrEqualToNode *new_GreaterThanOrEqualToNode(NodeBase *left, NodeBase *right);
+
+typedef struct LessThanNode {
+	NodeBase type;
+	NodeBase *left;
+	NodeBase *right;
+} LessThanNode;
+LessThanNode *new_LessThanNode(NodeBase *left, NodeBase *right);
+
+typedef struct GreaterThanNode {
+	NodeBase type;
+	NodeBase *left;
+	NodeBase *right;
+} GreaterThanNode;
+GreaterThanNode *new_GreaterThanNode(NodeBase *left, NodeBase *right);
 
 #endif

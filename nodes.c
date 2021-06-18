@@ -15,6 +15,7 @@ FloatNode *new_FloatNode(double value) {
 	F->value = value;
 	return F;
 }
+
 UnaryMinusNode *new_UnaryMinusNode(NodeBase *operand) {
 	UnaryMinusNode *M = malloc(sizeof(AddNode));
 	M->type = UnaryMinusNodeBase;
@@ -27,6 +28,7 @@ UnaryPlusNode *new_UnaryPlusNode(NodeBase *operand) {
 	M->operand = operand;
 	return M;
 }
+
 AddNode *new_AddNode(NodeBase *left, NodeBase *right) {
 	AddNode *A = malloc(sizeof(AddNode));
 	A->type = AddNodeBase;
@@ -63,3 +65,45 @@ ModuloNode *new_ModuloNode(NodeBase *left, NodeBase *right) {
 	return M;
 }
 
+EqualityNode *new_EqualityNode(NodeBase *left, NodeBase *right) {
+	EqualityNode *E = malloc(sizeof(EqualityNode));
+	E->type = EqualityNodeBase;
+	E->right = right;
+	E->left = left;
+	return E;
+}
+InequalityNode *new_InequalityNode(NodeBase *left, NodeBase *right) {
+	InequalityNode *I = malloc(sizeof(InequalityNode));
+	I->type = InequalityNodeBase;
+	I->left = left;
+	I->right = right;
+	return I;
+}
+LessThanOrEqualToNode *new_LessThanOrEqualToNode(NodeBase *left, NodeBase *right) {
+	LessThanOrEqualToNode *L = malloc(sizeof(LessThanOrEqualToNode));
+	L->type = LessThanOrEqualToNodeBase;
+	L->left = left;
+	L->right = right;
+	return L;
+}
+GreaterThanOrEqualToNode *new_GreaterThanOrEqualToNode(NodeBase *left, NodeBase *right) {
+	GreaterThanOrEqualToNode *G = malloc(sizeof(GreaterThanOrEqualToNode));
+	G->type = GreaterThanOrEqualToNodeBase;
+	G->left = left;
+	G->right = right;
+	return G;
+}
+LessThanNode *new_LessThanNode(NodeBase *left, NodeBase *right) {
+	LessThanNode *L = malloc(sizeof(LessThanNode));
+	L->type = LessThanNodeBase;
+	L->left = left;
+	L->right = right;
+	return L;
+}
+GreaterThanNode *new_GreaterThanNode(NodeBase *left, NodeBase *right) {
+	GreaterThanNode *G = malloc(sizeof(GreaterThanNode));
+	G->type = GreaterThanNodeBase;
+	G->left = left;
+	G->right = right;
+	return G;
+}

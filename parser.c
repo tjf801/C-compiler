@@ -80,10 +80,52 @@ NodeBase *Parser_parse_and_expression(Parser *self) {
 	return Parser_parse_equality_expression(self); //TODO
 }
 NodeBase *Parser_parse_equality_expression(Parser *self) {
-	return Parser_parse_relational_expression(self); //TODO
+	/*
+	equality_expression
+		: relational_expression
+		| equality_expression EQ_OP relational_expression
+		| equality_expression NE_OP relational_expression
+		;
+	*/
+	NodeBase *relational_expression = Parser_parse_relational_expression(self);
+	
+	Token *next_token = Parser_peek_next_token(self);
+	
+	while (next_token->token_base==OperatorTokenBase&&(((OperatorToken*)next_token)->type==EqualTo||((OperatorToken*)next_token)->type==NotEqualTo)) {
+		OperatorToken *token = (OperatorToken*)Parser_pop_next_token(self);
+		NodeBase *next_relational_expression = Parser_parse_relational_expression(self);
+		if (token->type==EqualTo) relational_expression = (NodeBase*)new_EqualityNode(relational_expression, next_relational_expression);
+		else if (token->type==NotEqualTo) relational_expression = (NodeBase*)new_InequalityNode(relational_expression, next_relational_expression);
+		next_token = Parser_peek_next_token(self);
+	}
+	
+	return relational_expression;
 }
 NodeBase *Parser_parse_relational_expression(Parser *self) {
-	return Parser_parse_shift_expression(self); //TODO
+	/*
+	relational_expression
+		: shift_expression
+		| relational_expression '<' shift_expression
+		| relational_expression '>' shift_expression
+		| relational_expression LE_OP shift_expression
+		| relational_expression GE_OP shift_expression
+		;
+	*/
+	NodeBase *shift_expression = Parser_parse_shift_expression(self);
+	
+	Token *next_token = Parser_peek_next_token(self);
+	
+	while (next_token->token_base==OperatorTokenBase&&(((OperatorToken*)next_token)->type==LessThan||((OperatorToken*)next_token)->type==GreaterThan||((OperatorToken*)next_token)->type==LessThanOrEqualTo||((OperatorToken*)next_token)->type==GreaterThanOrEqualTo)) {
+		OperatorToken *token = (OperatorToken*)Parser_pop_next_token(self);
+		NodeBase *next_shift_expression = Parser_parse_shift_expression(self);
+		if (token->type==LessThan) shift_expression = (NodeBase*)new_LessThanNode(shift_expression, next_shift_expression);
+		else if (token->type==GreaterThan) shift_expression = (NodeBase*)new_GreaterThanNode(shift_expression, next_shift_expression);
+		else if (token->type==LessThanOrEqualTo) shift_expression = (NodeBase*)new_LessThanOrEqualToNode(shift_expression, next_shift_expression);
+		else if (token->type==GreaterThanOrEqualTo) shift_expression = (NodeBase*)new_GreaterThanOrEqualToNode(shift_expression, next_shift_expression);
+		next_token = Parser_peek_next_token(self);
+	}
+	
+	return shift_expression;
 }
 NodeBase *Parser_parse_shift_expression(Parser *self) {
 	return Parser_parse_additive_expression(self); //TODO
@@ -100,9 +142,9 @@ NodeBase *Parser_parse_additive_expression(Parser *self) {
 	
 	Token *next_token = Parser_peek_next_token(self);
 	
-	while (next_token->token_base==OperatorTokenBase&&(((OperatorToken*)next_token)->type==Plus || ((OperatorToken*)next_token)->type==Minus)) {
+	while (next_token->token_base==OperatorTokenBase&&(((OperatorToken*)next_token)->type==Plus||((OperatorToken*)next_token)->type==Minus)) {
 		OperatorToken *token = (OperatorToken*)Parser_pop_next_token(self);
-		NodeBase *next_multiplicative_expression = Parser_parse_multiplicative_expression(self);
+		NodeBase *next_multiplicative_expression = (NodeBase*)Parser_parse_multiplicative_expression(self);
 		if (token->type==Plus) multiplicative_expression = (NodeBase*)new_AddNode(multiplicative_expression, next_multiplicative_expression);
 		else if (token->type==Minus) multiplicative_expression = (NodeBase*)new_SubtractNode(multiplicative_expression, next_multiplicative_expression);
 		next_token = Parser_peek_next_token(self);
