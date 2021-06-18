@@ -22,29 +22,6 @@ void error(char *format, ...) {
 	exit(1);
 }
 
-static void test_lexer(char *text) {
-	Lexer *lexer = new_Lexer(text);
-	Token *token;
-	while ((token=Lexer_getNextToken(lexer))->token_base!=EOFTokenBase) {
-		char tokentext[64];
-		strncpy(tokentext, token->location, token->length);
-		tokentext[token->length] = '\0';
-		printf("%d '%s' ", token->length, tokentext);
-		if (token->token_base==KeywordTokenBase) {
-			printf("kwd\n");
-		} else if (token->token_base==IdentifierTokenBase) {
-			printf("id\n");
-		} else if (token->token_base==ConstantTokenBase) {
-			printf("cst %d\n", ((ConstantToken*)token)->data.as_integer_constant);
-		} else if (token->token_base==OperatorTokenBase) {
-			printf("op\n");
-		} else if (token->token_base==StringLiteralTokenBase) {
-			printf("str\n");
-		}
-	}
-	
-}
-
 
 int main(int argc, char **argv) {
 	if (argc != 2) {
@@ -54,28 +31,6 @@ int main(int argc, char **argv) {
 	
 	// first argument
 	char *p = argv[1];
-	
-	/*
-	// movs the first int into the rax register
-	printf("  mov $%ld, %%rax\n", strtol(p, &p, 10));
-	
-	while (*p) {
-		if (*p == '+') {
-			++p;
-			printf("  add $%ld, %%rax\n", strtol(p, &p, 10));
-			continue;
-		}
-		if (*p == '-') {
-			++p;
-			printf("  sub $%ld %%rax\n", strtol(p, &p, 10));
-			continue;
-		}
-		
-		fprintf(stderr, "unexpected character '%c'\n", *p);
-		return 1;
-	}
-	
-	printf("  ret\n");*/
 	
 	Parser *parser = new_Parser(p);
 	NodeBase *tree = Parser_parse_statement(parser);
