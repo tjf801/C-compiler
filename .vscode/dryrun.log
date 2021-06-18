@@ -1,0 +1,13 @@
+make.exe test --dry-run --always-make --keep-going --print-directory
+make.exe: Entering directory `c:/Users/Tyler/Desktop/C compiler'
+gcc -std=c11 -g -fno-common -c -o codegen.o codegen.c
+gcc -std=c11 -g -fno-common -c -o lexer.o lexer.c
+gcc -std=c11 -g -fno-common -c -o main.o main.c
+gcc -std=c11 -g -fno-common -c -o nodes.o nodes.c
+gcc -std=c11 -g -fno-common -c -o parser.o parser.c
+gcc -std=c11 -g -fno-common -o ccompiler codegen.o lexer.o main.o nodes.o parser.o 
+"C:\Program Files\Git\bin\bash.exe" test.sh
+del tmp.exe
+del tmp.s
+make.exe: Leaving directory `c:/Users/Tyler/Desktop/C compiler'
+ 

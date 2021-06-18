@@ -1,0 +1,7 @@
+{
+	"files.associations": {
+		"regex": "c",
+		"nodes.h": "c",
+		"parser.h": "c"
+	}
+}
