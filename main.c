@@ -78,7 +78,7 @@ int main(int argc, char **argv) {
 	printf("  ret\n");*/
 	
 	Parser *parser = new_Parser(p);
-	NodeBase *tree = Parser_parse_expression(parser);
+	NodeBase *tree = Parser_parse_statement(parser);
 	codegen(tree);
 	
 	return 0;

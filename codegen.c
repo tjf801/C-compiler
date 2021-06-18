@@ -1,8 +1,17 @@
 #include <stdio.h>
+#include <stdarg.h>
 #include "lexer.h"
 #include "nodes.h"
 #include "parser.h"
 #include "codegen.h"
+
+static void codegen_error(char *format, ...) {
+	va_list ap;
+	va_start(ap, format);
+	vfprintf(stderr, format, ap);
+	fprintf(stderr, "\n");
+	exit(3);
+}
 
 static int stack_depth = 0;
 
@@ -13,6 +22,21 @@ static void push() {
 static void pop() {
 	printf("  pop %%rdi\n");
 	stack_depth--;
+}
+
+void codegen_statement(const NodeBase *node) {
+	switch (*node) {
+		case NullStatementNodeBase: {
+			return;
+		}
+		case ExpressionStatementNodeBase: {
+			codegen_expression(((ExpressionStatementNode*)node)->expression);
+			return;
+		}
+		default: {
+			codegen_error("invalid statement type");
+		}
+	}
 }
 
 void codegen_expression(const NodeBase *node) {
@@ -124,6 +148,9 @@ void codegen_expression(const NodeBase *node) {
 			printf("  movzb %%al, %%rax\n");
 			return;
 		}
+		default: {
+			codegen_error("invalid expression type %d", *node);
+		}
 		
 	}
 }
@@ -131,6 +158,6 @@ void codegen_expression(const NodeBase *node) {
 void codegen(const NodeBase *node) {
 	printf("  .globl main\n");
 	printf("main:\n");
-	codegen_expression(node);
+	codegen_statement(node);
 	printf("  ret\n");
 }

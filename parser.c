@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <stdarg.h>
 
-void parser_error(char *format, ...) {
+static void parser_error(char *format, ...) {
 	va_list ap;
 	va_start(ap, format);
 	vfprintf(stderr, format, ap);
@@ -53,6 +53,29 @@ Token *Parser_pop_next_token(Parser *self) {
 	TokenVector_push(self->previous_tokens, self->next_token);
 	self->next_token = NULL;
 	return self->previous_tokens->data[self->previous_tokens->length-1];
+}
+
+NodeBase *Parser_parse_statement(Parser *self) {
+	/*
+	statement
+		: labeled_statement
+		| compound_statement
+		| expression_statement
+		| selection_statement
+		| iteration_statement
+		| jump_statement
+		;
+	*/
+	return Parser_parse_expression_statement(self); //TODO
+}
+
+NodeBase *Parser_parse_expression_statement(Parser *self) {
+	NodeBase *expression = Parser_parse_expression(self);
+	Token *next_token = Parser_pop_next_token(self);
+	if (!(next_token->token_base==OperatorTokenBase&&((OperatorToken*)next_token)->type==Semicolon)) {
+		parser_error("expected a semicolon after expression statement");
+	}
+	return new_ExpressionStatementNode(expression);
 }
 
 NodeBase *Parser_parse_expression(Parser *self) {

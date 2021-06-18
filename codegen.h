@@ -5,6 +5,7 @@
 #include "parser.h"
 
 void codegen(const NodeBase *node);
+void codegen_statement(const NodeBase *node);
 void codegen_expression(const NodeBase *node);
 
 #endif

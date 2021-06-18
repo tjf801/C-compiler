@@ -107,3 +107,11 @@ GreaterThanNode *new_GreaterThanNode(NodeBase *left, NodeBase *right) {
 	G->right = right;
 	return G;
 }
+
+
+ExpressionStatementNode *new_ExpressionStatementNode(NodeBase *expression) {
+	ExpressionStatementNode *E = malloc(sizeof(ExpressionStatementNode));
+	E->type = ExpressionStatementNodeBase;
+	E->expression = expression;
+	return E;
+}

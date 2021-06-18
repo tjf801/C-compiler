@@ -24,6 +24,9 @@ Parser *new_Parser(char *text);
 Token *Parser_peek_next_token(Parser *self);
 Token *Parser_pop_next_token(Parser *self);
 
+NodeBase *Parser_parse_statement(Parser *self);
+NodeBase *Parser_parse_expression_statement(Parser *self);
+
 NodeBase *Parser_parse_expression(Parser *self);
 NodeBase *Parser_parse_assignment_expression(Parser *self);
 NodeBase *Parser_parse_conditional_expression(Parser *self);
