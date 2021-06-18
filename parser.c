@@ -66,7 +66,38 @@ NodeBase *Parser_parse_statement(Parser *self) {
 		| jump_statement
 		;
 	*/
-	return Parser_parse_expression_statement(self); //TODO
+	Token *next_token = Parser_peek_next_token(self);
+	if (next_token->token_base==KeywordTokenBase && ((KeywordToken*)next_token)->type==Return) { //TODO
+		return Parser_parse_jump_statement(self);
+	}
+	else return Parser_parse_expression_statement(self); //TODO
+}
+
+NodeBase *Parser_parse_jump_statement(Parser *self) {
+	/*
+	jump_statement
+		: GOTO IDENTIFIER ';'
+		| CONTINUE ';'
+		| BREAK ';'
+		| RETURN ';'
+		| RETURN expression ';'
+		;
+	*/
+	Token *next_token = Parser_peek_next_token(self);
+	if (next_token->token_base==KeywordTokenBase && ((KeywordToken*)next_token)->type==Return) {
+		Parser_pop_next_token(self);
+		NodeBase *expression;
+		if (!(Parser_peek_next_token(self)->token_base==OperatorTokenBase&&((OperatorToken*)Parser_peek_next_token(self))->type==Semicolon)) {
+			expression = Parser_parse_expression(self);
+		}
+		else expression = NULL;
+		if (!(Parser_peek_next_token(self)->token_base==OperatorTokenBase&&((OperatorToken*)Parser_peek_next_token(self))->type==Semicolon)) {
+			parser_error("expected semicolon after return statement");
+		}
+		Parser_pop_next_token(self);
+		return (NodeBase*)new_ReturnStatementNode(expression);
+	}
+	else parser_error("TODO jump statements");
 }
 
 NodeBase *Parser_parse_expression_statement(Parser *self) {
@@ -75,7 +106,7 @@ NodeBase *Parser_parse_expression_statement(Parser *self) {
 	if (!(next_token->token_base==OperatorTokenBase&&((OperatorToken*)next_token)->type==Semicolon)) {
 		parser_error("expected a semicolon after expression statement");
 	}
-	return new_ExpressionStatementNode(expression);
+	return (NodeBase*)new_ExpressionStatementNode(expression);
 }
 
 NodeBase *Parser_parse_expression(Parser *self) {

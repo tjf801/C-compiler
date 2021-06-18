@@ -4,6 +4,7 @@
 typedef enum NodeBase {
 	NullStatementNodeBase = 0,
 	ExpressionStatementNodeBase,
+	ReturnStatementNodeBase,
 	
 	IntegerNodeBase,
 	FloatNodeBase,
@@ -120,9 +121,15 @@ GreaterThanNode *new_GreaterThanNode(NodeBase *left, NodeBase *right);
 
 
 typedef struct ExpressionStatementNode {
-	NodeBase *type;
+	NodeBase type;
 	NodeBase *expression;
 } ExpressionStatementNode;
 ExpressionStatementNode *new_ExpressionStatementNode(NodeBase *expression);
+
+typedef struct ReturnStatementNode {
+	NodeBase type;
+	NodeBase *expression;
+} ReturnStatementNode;
+ReturnStatementNode *new_ReturnStatementNode(NodeBase* expression);
 
 #endif

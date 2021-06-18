@@ -33,6 +33,13 @@ void codegen_statement(const NodeBase *node) {
 			codegen_expression(((ExpressionStatementNode*)node)->expression);
 			return;
 		}
+		case ReturnStatementNodeBase: {
+			if (((ReturnStatementNode*)node)->expression!=NULL) {
+				codegen_expression(((ReturnStatementNode*)node)->expression);
+			}
+			printf("  jmp .L.return\n");
+			return;
+		}
 		default: {
 			codegen_error("invalid statement type");
 		}
@@ -158,6 +165,11 @@ void codegen_expression(const NodeBase *node) {
 void codegen(const NodeBase *node) {
 	printf("  .globl main\n");
 	printf("main:\n");
+	printf("  push %%rbp\n");
+	printf("  mov %%rsp, %%rbp\n");
 	codegen_statement(node);
-	printf("  ret\n");
+	printf(".L.return:\n");
+	printf("  mov %%rbp, %%rsp\n");
+	printf("  pop %%rbp\n");
+	printf("  ret\n");	
 }

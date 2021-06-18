@@ -115,3 +115,9 @@ ExpressionStatementNode *new_ExpressionStatementNode(NodeBase *expression) {
 	E->expression = expression;
 	return E;
 }
+ReturnStatementNode *new_ReturnStatementNode(NodeBase *expression) {
+	ReturnStatementNode *R = malloc(sizeof(ReturnStatementNode));
+	R->type = ReturnStatementNodeBase;
+	R->expression = expression;
+	return R;
+}
