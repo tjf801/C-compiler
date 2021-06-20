@@ -24,20 +24,15 @@ void error(char *format, ...) {
 
 
 int main(int argc, char **argv) {
-	if (argc != 2) {
-		fprintf(stderr, "%s: invalid number of arguments\n", argv[0]);
-		return 1;
-	}
+	if (argc != 2) error("%s: invalid number of arguments\n", argv[0]);
 	
 	// first argument
 	char *p = argv[1];
 	
 	/*
 	TODO:
-	blocks `{}`
-	single letter vars `a = 3;`
-	multiple letter vars `test = 4;`
 	function
+	multiple letter vars `test = 4;`
 	if stmnt
 	while stmnt
 	for stmnt
