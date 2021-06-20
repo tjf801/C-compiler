@@ -147,7 +147,39 @@ NodeBase *Parser_parse_expression(Parser *self) {
 	return Parser_parse_assignment_expression(self); //TODO
 }
 NodeBase *Parser_parse_assignment_expression(Parser *self) {
-	return Parser_parse_conditional_expression(self); //TODO
+	/*
+	assignment_expression
+		: conditional_expression
+		| unary_expression assignment_operator assignment_expression
+		;
+	assignment_operator
+		: '='
+		| MUL_ASSIGN
+		| DIV_ASSIGN
+		| MOD_ASSIGN
+		| ADD_ASSIGN
+		| SUB_ASSIGN
+		| LEFT_ASSIGN
+		| RIGHT_ASSIGN
+		| AND_ASSIGN
+		| XOR_ASSIGN
+		| OR_ASSIGN
+		;
+	*/
+	//TODO: none of this is up to spec
+	NodeBase *conditional_expression = Parser_parse_conditional_expression(self); //TODO!!!
+	
+	Token *next_token = Parser_peek_next_token(self);
+	
+	while (next_token->token_base==OperatorTokenBase&&((OperatorToken*)next_token)->type==Equals/*TODO*/) {
+		OperatorToken *token = (OperatorToken*)Parser_pop_next_token(self);
+		NodeBase *next_conditional_expression = Parser_parse_assignment_expression(self);
+		if (token->type==Equals) conditional_expression = (NodeBase*)new_AssignNode(conditional_expression, next_conditional_expression);
+		//TODO
+		next_token = Parser_peek_next_token(self);
+	}
+	
+	return conditional_expression; //TODO
 }
 NodeBase *Parser_parse_conditional_expression(Parser *self) {
 	return Parser_parse_logical_or_expression(self); //TODO
@@ -355,7 +387,7 @@ NodeBase *Parser_parse_primary_expression(Parser *self) {
 		}
 	}
 	else if (token->token_base==IdentifierTokenBase) {
-		
+		return (NodeBase*)new_VariableNode((IdentifierToken*)Parser_pop_next_token(self));
 	}
 	else if (token->token_base==StringLiteralTokenBase) {
 		

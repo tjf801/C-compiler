@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <assert.h>
+#include "lexer.h"
 #include "nodes.h"
 
 IntegerNode *new_IntegerNode(long long value) {
@@ -14,6 +16,13 @@ FloatNode *new_FloatNode(double value) {
 	F->type = FloatNodeBase;
 	F->value = value;
 	return F;
+}
+VariableNode *new_VariableNode(IdentifierToken *value) {
+	VariableNode *V = malloc(sizeof(VariableNode));
+	assert(value->length==1);
+	V->type = VariableNodeBase;
+	V->identifier = value;
+	return V;
 }
 
 UnaryMinusNode *new_UnaryMinusNode(NodeBase *operand) {
@@ -108,6 +117,13 @@ GreaterThanNode *new_GreaterThanNode(NodeBase *left, NodeBase *right) {
 	return G;
 }
 
+AssignNode *new_AssignNode(NodeBase *left, NodeBase *right) {
+	AssignNode *A = malloc(sizeof(AssignNode));
+	A->type = AssignNodeBase;
+	A->left = left;
+	A->right = right;
+	return A;
+}
 
 BlockNode *new_BlockNode(size_t initial_size) {
 	BlockNode *B = malloc(sizeof(BlockNode));

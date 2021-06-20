@@ -1,5 +1,6 @@
 #ifndef NODES_H
 #define NODES_H
+#include "lexer.h"
 
 typedef enum NodeBase {
 	NullStatementNodeBase = 0,
@@ -26,6 +27,9 @@ typedef enum NodeBase {
 	GreaterThanOrEqualToNodeBase,
 	LessThanNodeBase,
 	GreaterThanNodeBase,
+	
+	AssignNodeBase,
+	
 } NodeBase;
 
 
@@ -40,6 +44,11 @@ typedef struct FloatNode {
 	double value;
 } FloatNode;
 FloatNode *new_FloatNode(double value);
+typedef struct VariableNode {
+	NodeBase type;
+	IdentifierToken *identifier;
+} VariableNode;
+VariableNode *new_VariableNode(IdentifierToken *value);
 
 typedef struct UnaryMinusNode {
 	NodeBase type;
@@ -119,6 +128,13 @@ typedef struct GreaterThanNode {
 	NodeBase *right;
 } GreaterThanNode;
 GreaterThanNode *new_GreaterThanNode(NodeBase *left, NodeBase *right);
+
+typedef struct AssignNode {
+	NodeBase type;
+	NodeBase *left;
+	NodeBase *right;
+} AssignNode;
+AssignNode *new_AssignNode(NodeBase *left, NodeBase *right);
 
 
 typedef struct ExpressionStatementNode {

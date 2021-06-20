@@ -51,4 +51,10 @@ assert 1 '{return 1>=0;}'
 assert 1 '{return 1>=1;}'
 assert 0 '{return 1>=2;}'
 
+assert 3 '{a = 3; return a;}'
+assert 5 '{a = 4; a = 2; return a+3;}'
+assert 4 '{a = 1; a = a + 3; return a;}'
+assert 6 '{a = b = 3; return a + b;}'
+assert 12 '{a = 4; z = 3; return a*z;}'
+
 echo Compiler Passed All Tests!

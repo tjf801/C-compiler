@@ -24,6 +24,15 @@ static void pop() {
 	stack_depth--;
 }
 
+static void codegen_address(const NodeBase *node) {
+	if (*node == VariableNodeBase) {
+		int offset = (((VariableNode*)node)->identifier->value[0] - 'a' + 1) * 8;
+		printf("  lea %d(%%rbp), %%rax\n", -offset);
+		return;
+	}
+	codegen_error("not an lvalue");
+}
+
 void codegen_block(const NodeBase *node) {
 	if (*node==BlockNodeBase) {
 		BlockNode *block = (BlockNode*)node;
@@ -168,6 +177,20 @@ void codegen_expression(const NodeBase *node) {
 			printf("  movzb %%al, %%rax\n");
 			return;
 		}
+		
+		case VariableNodeBase: {
+			codegen_address(node);
+			printf("  mov (%%rax), %%rax\n");
+			return;
+		}
+		case AssignNodeBase: {
+			codegen_address(((AssignNode*)node)->left);
+			push();
+			codegen_expression(((AssignNode*)node)->right);
+			pop();
+			printf("  mov %%rax, (%%rdi)\n");;
+			return;
+		}
 		default: {
 			codegen_error("invalid expression type %d", *node);
 		}
@@ -180,6 +203,7 @@ void codegen(const NodeBase *node) {
 	printf("main:\n");
 	printf("  push %%rbp\n");
 	printf("  mov %%rsp, %%rbp\n");
+	printf("  sub $208, %%rsp\n"); //makes space for the 26 variables
 	codegen_block(node);
 	printf(".L.return:\n");
 	printf("  mov %%rbp, %%rsp\n");
